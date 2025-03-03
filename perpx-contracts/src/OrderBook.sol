@@ -23,79 +23,55 @@ contract OrderBook is Ownable {
     CustomPriceFeed public priceFeed;
     address public immutable DIA_ORACLE;
     uint256 public nextOrderId;
-    bool public isPaused = false;
-
-    Order[] public buyOrders;
-    Order[] public sellOrders;
-    mapping(uint256 => uint256) public orderIndex; // Maps order ID to index
+    mapping(uint256 => Order) public orders;
+    uint256[] public orderIds;
 
     event OrderPlaced(uint256 id, address trader, uint256 price, uint256 size, OrderType orderType);
     event OrderCancelled(uint256 id, address trader);
     event OrderMatched(uint256 buyOrderId, uint256 sellOrderId, uint256 price, uint256 size);
 
-    constructor(address _priceFeed, address _diaOracle) {
+    constructor(address _priceFeed, address _diaOracle) Ownable(msg.sender) {
         priceFeed = CustomPriceFeed(_priceFeed);
         DIA_ORACLE = _diaOracle;
     }
 
-    modifier tradingAllowed() {
-        require(!isPaused, "Trading is paused");
-        _;
-    }
-
-    function pauseTrading() external onlyOwner {
-        isPaused = true;
-    }
-
-    function resumeTrading() external onlyOwner {
-        isPaused = false;
-    }
-
-    function placeOrder(uint256 price, uint256 size, OrderType orderType, uint256 slippage) external tradingAllowed {
+    function placeOrder(uint256 price, uint256 size, OrderType orderType) external {
         require(size > 0, "Order size must be greater than zero");
-        require(slippage <= 100, "Slippage too high"); // Max 1% slippage allowed
 
         uint256 orderId = nextOrderId++;
-        Order memory newOrder = Order(orderId, msg.sender, price, size, orderType, block.timestamp);
-
-        if (orderType == OrderType.Buy) {
-            buyOrders.push(newOrder);
-            orderIndex[orderId] = buyOrders.length - 1;
-        } else {
-            sellOrders.push(newOrder);
-            orderIndex[orderId] = sellOrders.length - 1;
-        }
+        orders[orderId] = Order(orderId, msg.sender, price, size, orderType, block.timestamp);
+        orderIds.push(orderId);
 
         emit OrderPlaced(orderId, msg.sender, price, size, orderType);
     }
 
     function cancelOrder(uint256 orderId) external {
-        bool found = false;
-        for (uint256 i = 0; i < buyOrders.length; i++) {
-            if (buyOrders[i].id == orderId && buyOrders[i].trader == msg.sender) {
-                removeBuyOrder(i);
-                found = true;
+        require(orders[orderId].trader == msg.sender, "Only order owner can cancel");
+
+        // Efficiently remove order from orderIds
+        uint256 indexToRemove;
+        for (uint256 i = 0; i < orderIds.length; i++) {
+            if (orderIds[i] == orderId) {
+                indexToRemove = i;
                 break;
             }
         }
-        for (uint256 i = 0; i < sellOrders.length && !found; i++) {
-            if (sellOrders[i].id == orderId && sellOrders[i].trader == msg.sender) {
-                removeSellOrder(i);
-                break;
-            }
-        }
+        orderIds[indexToRemove] = orderIds[orderIds.length - 1]; // Swap with last
+        orderIds.pop(); // Remove last entry
+
+        delete orders[orderId];
 
         emit OrderCancelled(orderId, msg.sender);
     }
 
-    function matchOrders() external tradingAllowed {
-        uint256 i = 0;
-        while (i < buyOrders.length) {
-            Order storage buyOrder = buyOrders[i];
+    function matchOrders() external {
+        for (uint256 i = 0; i < orderIds.length; i++) {
+            Order storage buyOrder = orders[orderIds[i]];
+            if (buyOrder.orderType != OrderType.Buy) continue;
 
-            uint256 j = 0;
-            while (j < sellOrders.length) {
-                Order storage sellOrder = sellOrders[j];
+            for (uint256 j = 0; j < orderIds.length; j++) {
+                Order storage sellOrder = orders[orderIds[j]];
+                if (sellOrder.orderType != OrderType.Sell) continue;
 
                 if (buyOrder.price >= sellOrder.price) {
                     uint256 tradeSize = buyOrder.size < sellOrder.size ? buyOrder.size : sellOrder.size;
@@ -104,22 +80,12 @@ contract OrderBook is Ownable {
 
                     emit OrderMatched(buyOrder.id, sellOrder.id, sellOrder.price, tradeSize);
 
-                    if (buyOrder.size == 0) {
-                        removeBuyOrder(i);
-                    } else {
-                        i++;
-                    }
+                    if (buyOrder.size == 0) delete orders[buyOrder.id];
+                    if (sellOrder.size == 0) delete orders[sellOrder.id];
 
-                    if (sellOrder.size == 0) {
-                        removeSellOrder(j);
-                    } else {
-                        j++;
-                    }
-                } else {
-                    j++;
+                    break;
                 }
             }
-            i++;
         }
     }
 
@@ -129,17 +95,5 @@ contract OrderBook is Ownable {
 
     function getLatestCustomPrice() external view returns (uint128, uint128) {
         return priceFeed.getLatestPrice();
-    }
-
-    function removeBuyOrder(uint256 index) internal {
-        buyOrders[index] = buyOrders[buyOrders.length - 1]; // Move last element to removed position
-        orderIndex[buyOrders[index].id] = index;
-        buyOrders.pop();
-    }
-
-    function removeSellOrder(uint256 index) internal {
-        sellOrders[index] = sellOrders[sellOrders.length - 1]; // Move last element to removed position
-        orderIndex[sellOrders[index].id] = index;
-        sellOrders.pop();
     }
 }
