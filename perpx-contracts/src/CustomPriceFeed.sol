@@ -11,7 +11,7 @@ contract CustomPriceFeed is Ownable {
 
     constructor() Ownable(msg.sender) {}
 
-    function updatePrice(uint128 _newPrice) external onlyOwner {
+    function setPrice(uint128 _newPrice) external onlyOwner {
         latestPrice = _newPrice;
         lastUpdated = uint128(block.timestamp);
         emit PriceUpdated(_newPrice, lastUpdated);
