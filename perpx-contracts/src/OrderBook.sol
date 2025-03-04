@@ -89,11 +89,23 @@ contract OrderBook is Ownable {
         }
     }
 
+    // Fetch price from the Oracle
     function getPriceFromDIA(string memory pair) external view returns (uint128 price, uint128 timestamp) {
         (price, timestamp) = IDIAOracleV2(DIA_ORACLE).getValue(pair);
     }
 
+    // Fetch price from the CustomPriceFeed (for fallback purpose)
     function getLatestCustomPrice() external view returns (uint128, uint128) {
         return priceFeed.getLatestPrice();
+    }
+
+    // Combined function to fetch price (DIA Oracle first, fallback to CustomPriceFeed)
+    function getPrice(string memory pair) external view returns (uint128 price, uint128 timestamp) {
+        try IDIAOracleV2(DIA_ORACLE).getValue(pair) returns (uint128 p, uint128 t) {
+            price = p;
+            timestamp = t;
+        } catch {
+            (price, timestamp) = priceFeed.getLatestPrice();
+        }
     }
 }
