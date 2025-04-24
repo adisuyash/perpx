@@ -61,4 +61,3 @@ npm run dev
 
 <hr>
 
-[![protocol.land](https://arweave.net/eZp8gOeR8Yl_cyH9jJToaCrt2He1PHr0pR4o-mHbEcY)](https://protocol.land/#/repository/6abe06ce-e362-45c6-aae6-b78cd6a13229)
