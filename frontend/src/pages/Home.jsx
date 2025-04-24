@@ -78,15 +78,15 @@ const styles = {
   },
   buttonLink: {
     display: "inline-block",
-    width: "180px",
-    padding: "12px 10px",
+    width: "220px",
+    padding: "15px 10px",
     backgroundColor: "#50D2C1",
     color: "#16181D",
-    fontWeight: "500",
+    fontWeight: "600",
     border: "none",
     borderRadius: "50px", // Capsule shape
     cursor: "pointer",
-    fontSize: "16px",
+    fontSize: "18px",
     transition: "box-shadow 0.3s ease",
     boxShadow: "0 0 5px rgba(80, 210, 193, 0.3)", // Blur effect on all sides
   },
