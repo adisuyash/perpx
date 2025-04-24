@@ -1,9 +1,9 @@
-# PerpX
+# PerpX - A Decentralized Perpetual Exchange
 
-PerpX is a decentralized perpetual exchange on EDU Chain that aims to create synthetic assets that mimic the price of another asset without ever holding the actual asset. <br>
-This innovation allows users to gain exposure to various assets without the need to physically own them, providing a seamless and efficient way to diversify and manage investments.
+PerpX on EDU Chain is a decentralized perpetual exchange  that aims to create synthetic assets that mimic the price of another asset without ever holding the actual asset. <br>
+This innovation allows users to gain exposure to various assets without physically owning them, providing a seamless and efficient way to diversify and manage investments.
 
-#### Live Deployment on Vercel: https://PerpX.vercel.app
+#### Live Deployment on Vercel: [https://perp-dex.vercel.app](https://perpx-dex.vercel.app/)
 
 ## Project Structure
 
@@ -11,7 +11,7 @@ The project is divided into two main parts:
 
 ### Frontend
 
-The frontend source code is in the `frontend` folder in our GitHub repository. This section handles the user interface and interactions, providing a smooth and intuitive experience for users.
+The frontend source code is in our GitHub repository's `frontend` folder. This section handles the user interface and interactions, providing a smooth and intuitive experience for users.
 
 #### Folder Structure
 
