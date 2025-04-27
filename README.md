@@ -1,63 +1,73 @@
-# PerpX - A Decentralized Perpetual Exchange
+# PerpX
 
-PerpX on EDU Chain is a decentralized perpetual exchange  that aims to create synthetic assets that mimic the price of another asset without ever holding the actual asset. <br>
-This innovation allows users to gain exposure to various assets without physically owning them, providing a seamless and efficient way to diversify and manage investments.
+PerpX is a decentralized perpetual exchange built on the EDU Chain. It empowers users to create synthetic assets that track the price of real-world assets without requiring actual ownership.
 
-#### Live Deployment on Vercel: [https://perp-dex.vercel.app](https://perpx-dex.vercel.app/)
+**Live Deployment on Vercel:** https://perpx.vercel.app
+
+### Network Config:
+---
+Here are the network configurations for the EDU Chain: https://educhain.xyz/
+
+| Key            | Value                                                                                |
+| -------------- | ------------------------------------------------------------------------------------ |
+| Token          | `EDU`                                                                                |
+| Chain ID       | `656476`                                                                             |
+| RPC_URL        | `https://rpc.open-campus-codex.gelato.digital`                                       |
+| Block Explorer | [https://edu-chain-testnet.blockscout.com](https://edu-chain-testnet.blockscout.com) |
+
+### Deployments:
+---
+
+| Key                                                                                 | Contract Addresses                                                                                                                        |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| DIA Oracle Deployment Address                                                       | [0x6626f442eBc679f7e35bC62E36E3c1e8820C81C9](https://edu-chain-testnet.blockscout.com/address/0x6626f442eBc679f7e35bC62E36E3c1e8820C81C9) |
+| [`CustomPriceFeed.sol`](perpx-contracts/src/CustomPriceFeed.sol) Deployment Address | [0x592C7BEE8B59c0bbE6E431e35b47469CD56de421](https://edu-chain-testnet.blockscout.com/address/0x592C7BEE8B59c0bbE6E431e35b47469CD56de421) |
+| [`OrderBook.sol`](perpx-contracts/src/OrderBook.sol) Deployment Address             | [0xB6d356A248c9aA410a3b91Bca7Eaf0BE3E15AE0d](https://edu-chain-testnet.blockscout.com/address/0xB6d356A248c9aA410a3b91Bca7Eaf0BE3E15AE0d) |
+| Owner Address (Mine)                                                                | [0x225d5a1079121faD050a33bDf1373bAf71aa4219](https://edu-chain-testnet.blockscout.com/address/0x225d5a1079121faD050a33bDf1373bAf71aa4219) |
 
 ## Project Structure
 
-The project is divided into two main parts:
+The PerpX project is organized into two main parts:
 
 ### Frontend
 
-The frontend source code is in our GitHub repository's `frontend` folder. This section handles the user interface and interactions, providing a smooth and intuitive experience for users.
+The frontend code is located in the `frontend` folder of our GitHub repository.
 
-#### Folder Structure
+**Folder Structure**
 
-```
+```plaintext
 /frontend
-  ├── public
-  ├── src
-  ├── package.json
-  ├── README.md
-  └── ... (other necessary files and folders)
+├── public
+├── src
+├── package.json
+├── README.md
+└── ... (other necessary files and folders)
 ```
 
 ### Backend
 
-The backend code, which handles PerpX's core logic and data processing, is hosted on the BetterIDEA. The current file is provided in the `backend` folder in our GitHub repository.
-
-**Backend Code Link:** [PerpX Backend on BetterIDEA](https://ide.betteridea.dev/import?id=PVU35t7MLuI_6f73ix-GWULD5qadJBEHIr3PV7Zj75k)
+The backend code version is available in the `backend` folder of our GitHub repository.
 
 ## Getting Started
 
-To get started with the PerpX project, follow these steps:
+To get started with PerpX, follow these steps:
 
-### Clone the repository:
+1. Clone the repository:
 
-```
+   ```bash
+   git clone https://github.com/adisuyash/perpx.git
+   cd perpx/frontend
+   ```
 
-git clone https://github.com/adisuyash/PerpX.git
-cd PerpX/frontend
+2. Install dependencies:
 
-```
+   ```bash
+   npm install
+   ```
 
-### Install dependencies:
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-```
-
-npm install
-
-```
-
-### Run the development server:
-
-```
-
-npm run dev
-
-```
-
-<hr>
-
+Your development server will start. Start working with PerpX.
